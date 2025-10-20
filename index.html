@@ -162,33 +162,6 @@
         color: #ff0055;
       }
 
-      /* ---------- ROTATE MESSAGE ---------- */
-      .rotate-notice {
-        display: none;
-        font-size: 15px;
-        color: #e91e63;
-        text-align: center;
-        margin-bottom: 15px;
-        animation: fadeIn 1.5s ease-in-out;
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(5px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      @media only screen and (orientation: portrait) {
-        .rotate-notice {
-          display: block;
-        }
-      }
-
       .message p {
         font-size: 18px;
         color: #333;
@@ -204,6 +177,42 @@
         border-radius: 12px;
         max-width: 70%;
         align-self: center;
+      }
+
+      /* ---------- MODAL POPUP ---------- */
+      .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        justify-content: center;
+        align-items: center;
+        z-index: 99999;
+      }
+      .modal-content {
+        background: #fff;
+        padding: 25px 30px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        animation: popIn 0.4s ease;
+        max-width: 320px;
+      }
+      .modal-content p {
+        color: #e91e63;
+        font-size: 18px;
+        line-height: 1.5;
+        font-weight: bold;
+      }
+      @keyframes popIn {
+        from {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
       }
 
       /* ---------- OPEN STATES ---------- */
@@ -224,7 +233,6 @@
         opacity: 1 !important;
         pointer-events: auto !important;
         z-index: 9999 !important;
-        filter: none !important;
       }
       .letter.popped .read-me {
         display: block;
@@ -269,12 +277,6 @@
       <div class="letter" id="letter">
         <span class="read-me" id="readBtn">READ ME ❤️</span>
 
-        <!-- 📱 ROTATE NOTICE (below READ ME) -->
-        <div class="rotate-notice">
-          📱 Please rotate your phone to <b>landscape</b> to read the full
-          message 💌
-        </div>
-
         <div class="message">
           <p>
             I know that lately, I’ve been spending too much time playing Mobile
@@ -304,7 +306,18 @@
       </div>
     </div>
 
+    <!-- 📱 MODAL NOTICE -->
+    <div class="modal" id="rotateModal">
+      <div class="modal-content">
+        <p>
+          📱 Please rotate your phone to <b>landscape</b><br />
+          to read the full message 💌
+        </p>
+      </div>
+    </div>
+
     <script>
+      // Falling hearts
       const heartsContainer = document.getElementById("hearts");
       function createHeart() {
         const h = document.createElement("div");
@@ -317,10 +330,12 @@
       }
       setInterval(createHeart, 300);
 
+      // Envelope open
       const env = document.getElementById("env");
       const letter = document.getElementById("letter");
       const body = document.body;
       const readBtn = document.getElementById("readBtn");
+      const modal = document.getElementById("rotateModal");
 
       env.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -332,10 +347,22 @@
         }, 700);
       });
 
+      // Show modal on "READ ME ❤️" click
       readBtn.addEventListener("click", (e) => {
         e.stopPropagation();
-        letter.classList.add("read");
-        body.classList.add("blur");
+        modal.style.display = "flex";
+
+        // Hide modal after user clicks or rotates
+        function closeModal() {
+          modal.style.display = "none";
+          window.removeEventListener("orientationchange", closeModal);
+          document.removeEventListener("click", closeModal);
+          letter.classList.add("read");
+          body.classList.add("blur");
+        }
+
+        document.addEventListener("click", closeModal);
+        window.addEventListener("orientationchange", closeModal);
       });
     </script>
   </body>
