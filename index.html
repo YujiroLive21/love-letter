@@ -116,7 +116,7 @@
         z-index: 2;
       }
 
-      /* ---------- LETTER (LANDSCAPE) ---------- */
+      /* ---------- LETTER ---------- */
       .letter {
         position: absolute;
         top: 50%;
@@ -154,12 +154,39 @@
         color: #ff4081;
         cursor: pointer;
         user-select: none;
-        margin-bottom: 15px;
+        margin-bottom: 10px;
         transition: transform 0.2s ease, color 0.3s ease;
       }
       .letter .read-me:hover {
         transform: scale(1.1);
         color: #ff0055;
+      }
+
+      /* ---------- ROTATE MESSAGE ---------- */
+      .rotate-notice {
+        display: none;
+        font-size: 15px;
+        color: #e91e63;
+        text-align: center;
+        margin-bottom: 15px;
+        animation: fadeIn 1.5s ease-in-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(5px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media only screen and (orientation: portrait) {
+        .rotate-notice {
+          display: block;
+        }
       }
 
       .message p {
@@ -241,6 +268,12 @@
       <!-- Folded paper inside -->
       <div class="letter" id="letter">
         <span class="read-me" id="readBtn">READ ME ❤️</span>
+
+        <!-- 📱 ROTATE NOTICE (below READ ME) -->
+        <div class="rotate-notice">
+          📱 Please rotate your phone to <b>landscape</b> to read the full
+          message 💌
+        </div>
 
         <div class="message">
           <p>
