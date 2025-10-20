@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy Monthsarry!</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+      }
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #ffebee;
+        font-family: sans-serif;
+        position: relative;
+      }
+
+      /* ---------- HEARTS ---------- */
+      .hearts-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        pointer-events: none;
+      }
+      .heart {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: #ff69b4;
+        transform: rotate(45deg);
+        animation: fall 10s linear infinite;
+        opacity: 0.8;
+      }
+      .heart::before,
+      .heart::after {
+        content: "";
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: #ff69b4;
+        border-radius: 50%;
+      }
+      .heart::before {
+        top: -10px;
+        left: 0;
+      }
+      .heart::after {
+        top: 0;
+        left: -10px;
+      }
+      @keyframes fall {
+        0% {
+          transform: translateY(-100%) rotate(45deg);
+          opacity: 0.8;
+        }
+        100% {
+          transform: translateY(100vh) rotate(45deg);
+          opacity: 0;
+        }
+      }
+
+      /* ---------- ENVELOPE ---------- */
+      .wrapper {
+        position: relative;
+        width: 300px;
+        height: 200px;
+        background: #3760c9;
+        cursor: pointer;
+        transition: transform 0.3s;
+        z-index: 10;
+      }
+      .lid {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-right: 150px solid transparent;
+        border-bottom: 100px solid transparent;
+        border-left: 150px solid transparent;
+        transform-origin: top;
+        transition: transform 0.6s ease;
+      }
+      .lid.one {
+        border-top: 100px solid #658ced;
+        z-index: 3;
+      }
+      .lid.two {
+        border-top: 100px solid #3760c9;
+        z-index: 1;
+        transform: rotateX(90deg);
+      }
+      .envelope {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-top: 100px solid transparent;
+        border-right: 150px solid #c4dff0;
+        border-bottom: 100px solid #c4dff0;
+        border-left: 150px solid #a4d4f2;
+        z-index: 2;
+      }
+
+      /* ---------- LETTER (LANDSCAPE) ---------- */
+      .letter {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 600px;
+        height: 350px;
+        background: #fff;
+        border-radius: 15px;
+        opacity: 0;
+        transform: translate(-50%, -40%) scale(0.85);
+        transition: opacity 0.5s, transform 0.6s ease-out;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 25px 40px;
+        pointer-events: none;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        background: repeating-linear-gradient(
+            to bottom,
+            #fff 0px,
+            #fff 29px,
+            #d9edf7 29px,
+            #d9edf7 30px
+          ),
+          linear-gradient(to bottom, #fafafa, #fff);
+        font-family: "Indie Flower", cursive;
+        overflow-y: auto;
+      }
+
+      .letter .read-me {
+        display: none;
+        font-size: 28px;
+        font-weight: bold;
+        color: #ff4081;
+        cursor: pointer;
+        user-select: none;
+        margin-bottom: 15px;
+        transition: transform 0.2s ease, color 0.3s ease;
+      }
+      .letter .read-me:hover {
+        transform: scale(1.1);
+        color: #ff0055;
+      }
+
+      .message p {
+        font-size: 18px;
+        color: #333;
+        text-align: justify;
+        opacity: 0;
+        transition: opacity 0.5s;
+        line-height: 1.6;
+      }
+
+      .letter-image {
+        display: none;
+        margin-top: 25px;
+        border-radius: 12px;
+        max-width: 70%;
+        align-self: center;
+      }
+
+      /* ---------- OPEN STATES ---------- */
+      .wrapper.open .lid.one {
+        transform: rotateX(180deg);
+        z-index: 0;
+      }
+      .wrapper.open .lid.two {
+        transform: rotateX(180deg);
+        z-index: 0;
+      }
+
+      .letter.popped {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) scale(1) !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        z-index: 9999 !important;
+        filter: none !important;
+      }
+      .letter.popped .read-me {
+        display: block;
+      }
+
+      .letter.read {
+        transform: translate(-50%, -50%) scale(1.05) !important;
+      }
+      .letter.read p {
+        opacity: 1;
+      }
+      .letter.read .letter-image {
+        display: block;
+      }
+      .letter.read .read-me {
+        display: none;
+      }
+
+      /* ---------- BLUR EFFECT ---------- */
+      body.blur .hearts-container,
+      body.blur .wrapper {
+        filter: blur(6px);
+      }
+    </style>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Falling hearts -->
+    <div class="hearts-container" id="hearts"></div>
+
+    <!-- Envelope -->
+    <div class="wrapper" id="env">
+      <div class="lid one"></div>
+      <div class="lid two"></div>
+      <div class="envelope"></div>
+
+      <!-- Folded paper inside -->
+      <div class="letter" id="letter">
+        <span class="read-me" id="readBtn">READ ME ❤️</span>
+
+        <div class="message">
+          <p>
+            I know that lately, I’ve been spending too much time playing Mobile
+            Legends instead of giving you the attention you deserve. Sometimes,
+            I get too focused on the game and forget to check on you, even when
+            you’re not feeling well (gidugo). I’m really sorry if it made you
+            feel like I didn’t care, but the truth is, I always do.<br /><br />
+
+            I know I’ve been a bit selfish lately (never ko gahatag time while
+            ikaw is gahulat), but I promise I’ll fix myself. I want to give you
+            the kind of love and care you truly deserve. You’ve always been my
+            comfort, my peace, and my reason to do better(even though sige ka
+            kasuko).<br /><br />
+
+            I love you so much, babe. More months, years, minutes, and seconds
+            for us to share together. I truly believe our love will last, as
+            long as we keep choosing each other every single day yesssir<br /><br />
+
+            I really miss you, and I can’t wait for the time we graduate
+            together to chase our dreams, grab better opportunities, and build
+            our future side by side. Always take care of yourself, my love.<br /><br />
+
+            Happy 3rd Monthsary, babe. I’ll always love you, no matter what.
+          </p>
+          <img src="mot.jpg" alt="mot" class="letter-image" />
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const heartsContainer = document.getElementById("hearts");
+      function createHeart() {
+        const h = document.createElement("div");
+        h.className = "heart";
+        h.style.left = `${Math.random() * 100}vw`;
+        h.style.animationDuration = `${Math.random() * 5 + 5}s`;
+        h.style.width = h.style.height = `${Math.random() * 10 + 15}px`;
+        heartsContainer.appendChild(h);
+        setTimeout(() => h.remove(), 10000);
+      }
+      setInterval(createHeart, 300);
+
+      const env = document.getElementById("env");
+      const letter = document.getElementById("letter");
+      const body = document.body;
+      const readBtn = document.getElementById("readBtn");
+
+      env.addEventListener("click", (e) => {
+        e.stopPropagation();
+        env.classList.add("open");
+        setTimeout(() => {
+          body.appendChild(letter);
+          letter.classList.add("popped");
+          letter.style.pointerEvents = "auto";
+        }, 700);
+      });
+
+      readBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        letter.classList.add("read");
+        body.classList.add("blur");
+      });
+    </script>
+  </body>
+</html>
